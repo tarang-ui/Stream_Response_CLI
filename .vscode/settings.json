@@ -1,0 +1,17 @@
+{
+    "python.analysis.exclude": [
+        "**/venv",
+        "**/venv/**"
+    ],
+    "python.analysis.ignore": [
+        "**/venv",
+        "**/venv/**"
+    ],
+    "files.exclude": {
+        "**/venv": true
+    },
+    "search.exclude": {
+        "**/venv": true
+    },
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe"
+}
