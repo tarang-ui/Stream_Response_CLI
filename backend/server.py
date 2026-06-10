@@ -136,6 +136,12 @@ async def _sse_generator(req: ChatRequest) -> AsyncGenerator[str, None]:
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 
+@app.get("/", tags=["System"])
+async def root():
+    """Root redirect info."""
+    return {"status": "ok", "docs": "/docs", "health": "/health"}
+
+
 @app.get("/health", tags=["System"])
 async def health_check():
     """Check server health and Groq API key validity."""
