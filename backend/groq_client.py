@@ -36,7 +36,9 @@ def get_client() -> Groq:
     return Groq(api_key=api_key)
 
 
-def stream_chat(messages: list[dict], model: str = DEFAULT_MODEL, temperature: float = 0.7):
+def stream_chat(
+    messages: list[dict], model: str = DEFAULT_MODEL, temperature: float = 0.7
+):
     """
     Yield text chunks from the Groq streaming API.
 

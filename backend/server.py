@@ -49,7 +49,7 @@ app = FastAPI(
 # Allow Streamlit (localhost:8501) and any other local origin during dev
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # tighten in production
+    allow_origins=["*"],  # tighten in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -64,6 +64,7 @@ AVAILABLE_MODELS: list[str] = [
 ]
 
 # ── Request / Response schemas ────────────────────────────────────────────────
+
 
 class Message(BaseModel):
     role: str = Field(..., examples=["user"])
@@ -88,6 +89,7 @@ class ChatResponse(BaseModel):
 
 # ── Helper ───────────────────────────────────────────────────────────────────
 
+
 def _build_messages(req: ChatRequest) -> list[dict]:
     """Prepend system message to conversation history."""
     history = [build_system_message(req.system_prompt)]
@@ -102,11 +104,13 @@ async def _sse_generator(req: ChatRequest) -> AsyncGenerator[str, None]:
 
     # Run the synchronous generator in a thread pool to avoid blocking
     def _collect():
-        return list(stream_chat(
-            messages=_build_messages(req),
-            model=req.model,
-            temperature=req.temperature,
-        ))
+        return list(
+            stream_chat(
+                messages=_build_messages(req),
+                model=req.model,
+                temperature=req.temperature,
+            )
+        )
 
     try:
         chunks = await loop.run_in_executor(None, _collect)
@@ -116,7 +120,9 @@ async def _sse_generator(req: ChatRequest) -> AsyncGenerator[str, None]:
             yield f"data: {data}\n\n"
 
         # Final done event
-        done_data = json.dumps({"chunk": "", "done": True, "full_response": full_response})
+        done_data = json.dumps(
+            {"chunk": "", "done": True, "full_response": full_response}
+        )
         yield f"data: {done_data}\n\n"
 
     except EnvironmentError as exc:
@@ -128,6 +134,7 @@ async def _sse_generator(req: ChatRequest) -> AsyncGenerator[str, None]:
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
+
 
 @app.get("/health", tags=["System"])
 async def health_check():
@@ -158,18 +165,20 @@ async def chat(req: ChatRequest):
     Collects the full Groq response before returning.
     """
     try:
-        get_client()   # validates key early
+        get_client()  # validates key early
     except EnvironmentError as exc:
         raise HTTPException(status_code=500, detail=str(exc))
 
     loop = asyncio.get_event_loop()
 
     def _run():
-        return "".join(stream_chat(
-            messages=_build_messages(req),
-            model=req.model,
-            temperature=req.temperature,
-        ))
+        return "".join(
+            stream_chat(
+                messages=_build_messages(req),
+                model=req.model,
+                temperature=req.temperature,
+            )
+        )
 
     try:
         reply = await loop.run_in_executor(None, _run)
