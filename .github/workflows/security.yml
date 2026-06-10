@@ -1,0 +1,30 @@
+name: 🔒 Security — Dependency Audit
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"     # Every Monday at 06:00 UTC
+  push:
+    paths:
+      - "requirements.txt"
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: 🔒 pip-audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: 📦 Install pip-audit
+        run: pip install pip-audit
+
+      - name: 🔍 Audit dependencies
+        run: pip-audit -r requirements.txt --format=markdown >> $GITHUB_STEP_SUMMARY
