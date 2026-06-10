@@ -24,12 +24,12 @@ from typing import AsyncGenerator
 # ── Ensure project root is importable ────────────────────────────────────────
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field
+from fastapi import FastAPI, HTTPException  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.responses import StreamingResponse  # noqa: E402
+from pydantic import BaseModel, Field  # noqa: E402
 
-from backend.groq_client import (
+from backend.groq_client import (  # noqa: E402
     get_client,
     stream_chat,
     build_system_message,

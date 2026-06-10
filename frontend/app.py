@@ -10,13 +10,12 @@ import os
 # Allow imports from project root so backend/ is importable
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-import streamlit as st
-from backend.groq_client import (
+import streamlit as st  # noqa: E402
+from backend.groq_client import (  # noqa: E402
     stream_chat,
     build_system_message,
     build_user_message,
     build_assistant_message,
-    DEFAULT_MODEL,
     DEFAULT_SYSTEM_PROMPT,
     get_client,
 )
